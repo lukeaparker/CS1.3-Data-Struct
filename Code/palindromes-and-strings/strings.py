@@ -1,27 +1,83 @@
 #!python
 
 def contains(text, pattern):
-    """Return a boolean indicating whether pattern occurs in text."""
+    """Return a boolean indicating whether pattern occurs in text.
+    O(n*m) where n is the length of the pattern and m is the length of the text"""
     assert isinstance(text, str), 'text is not a string: {}'.format(text)
     assert isinstance(pattern, str), 'pattern is not a string: {}'.format(text)
-    # TODO: Implement contains here (iteratively and/or recursively)
-
+    index_patern = find_index(text, pattern)
+    if index_patern == None:
+        return False
+    else:
+        return True
+    
 
 def find_index(text, pattern):
     """Return the starting index of the first occurrence of pattern in text,
-    or None if not found."""
+    or None if not found.
+    O(n*m) where n is the length of the pattern and m is the length of the text"""
     assert isinstance(text, str), 'text is not a string: {}'.format(text)
     assert isinstance(pattern, str), 'pattern is not a string: {}'.format(text)
-    # TODO: Implement find_index here (iteratively and/or recursively)
 
 
+    t_index = 0
+    p_index = 0
+    if pattern == "":
+        return 0
+    elif len(pattern) == 1:
+        for i, char in enumerate(text):
+            if char == pattern:
+                return i 
+
+        return None
+
+    while t_index < len(text):
+        if text[t_index] == pattern[p_index]:
+            if p_index == len(pattern) - 1:
+                return t_index - p_index
+            p_index += 1
+            t_index += 1
+        elif text[t_index] != pattern[p_index]:
+            if p_index != 0:
+                t_index -= p_index - 1
+                p_index = 0 
+            else:
+                t_index += 1 
+    return None
+            
 def find_all_indexes(text, pattern):
     """Return a list of starting indexes of all occurrences of pattern in text,
-    or an empty list if not found."""
+    or an empty list if not found.
+    O(1) if item is the first that is checked
+    O(n*m) where n is the length of the pattern and m is the length of the text"""
     assert isinstance(text, str), 'text is not a string: {}'.format(text)
     assert isinstance(pattern, str), 'pattern is not a string: {}'.format(text)
-    # TODO: Implement find_all_indexes here (iteratively and/or recursively)
+    first_i = []
+    if pattern == "":
+        return [i for i in range(len(text)) ]
+    elif len(pattern) == 1:
+        return [i for i, char in enumerate(text) if char == pattern ]
 
+
+    t_index = 0
+    p_index = 0
+    while t_index < len(text):
+        print((t_index, p_index), (len(text), len(pattern)))
+        if text[t_index] == pattern[p_index]:
+            if p_index == len(pattern) - 1:
+                first_i.append(t_index - p_index)
+                t_index -= p_index - 1
+                p_index = 0 
+            p_index += 1
+            t_index += 1
+        elif text[t_index] != pattern[p_index]:
+            if p_index != 0:
+                t_index -= p_index - 1
+                p_index = 0 
+            else:
+                t_index += 1 
+    return first_i
+        
 
 def test_string_algorithms(text, pattern):
     found = contains(text, pattern)
@@ -54,3 +110,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # print(find_index("looper", "er"))
